@@ -46,13 +46,14 @@ class CollapsibleHeader extends StatelessWidget {
                       children: [
                         Text(
                           'Welcome!',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(color: Colors.white70),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
                         Text(
-                          currentUser?.firstName ?? 'User',
+                          currentUser?.username ?? 'User',
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -65,7 +66,7 @@ class CollapsibleHeader extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.logout, color: Colors.white),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                     },
                   ),
                 ],
