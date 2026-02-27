@@ -4,14 +4,9 @@ import '../../providers/app_providers.dart';
 import '../../widgets/collapsible_header.dart';
 import '../../widgets/product_card.dart';
 
-/// Product Listing Page with Daraz-style layout
-/// 
-/// KEY ARCHITECTURE DECISIONS:
-/// 1. Single vertical scrollable owned by CustomScrollView
-/// 2. Horizontal swipe controlled by PageView with physics management
-/// 3. Tab position preserved across swipes via manual tab tracking
+
 class ProductListingPage extends ConsumerStatefulWidget {
-  const ProductListingPage({Key? key}) : super(key: key);
+  const ProductListingPage({super.key});
 
   @override
   ConsumerState<ProductListingPage> createState() =>
@@ -20,20 +15,18 @@ class ProductListingPage extends ConsumerStatefulWidget {
 
 class _ProductListingPageState extends ConsumerState<ProductListingPage>
     with TickerProviderStateMixin {
-  // Initialize with default values instead of using late
+
   final PageController _pageController = PageController(initialPage: 0);
   final ScrollController _scrollController = ScrollController();
 
-  // TabController needs vsync which is available after initState, so we use nullable
+
   TabController? _tabController;
 
-  // Track which tab/category is selected
   int _selectedCategoryIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    // TabController initialized here with vsync
     _tabController = TabController(length: 0, vsync: this);
   }
 
@@ -59,7 +52,7 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage>
 
     return categoriesAsync.when(
       data: (categories) {
-        // Rebuild TabController if needed
+
         if (_tabController?.length != categories.length) {
           _tabController?.dispose();
           _tabController = TabController(
@@ -69,7 +62,6 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage>
           );
         }
 
-        // Update page controller to correct index if needed
         if (_pageController.hasClients &&
             _pageController.page?.toInt() != _selectedCategoryIndex) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -82,12 +74,11 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage>
         return Scaffold(
           body: Stack(
             children: [
-              // Main scrollable content
               CustomScrollView(
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  // Collapsible header
+
                   SliverAppBar(
                     expandedHeight: 150,
                     floating: false,
@@ -107,6 +98,7 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage>
                       tabBar: TabBar(
                         controller: _tabController,
                         isScrollable: true,
+                        tabAlignment: TabAlignment.start,
                         indicatorColor: Colors.blue,
                         labelColor: Colors.blue,
                         unselectedLabelColor: Colors.grey[600],
@@ -119,8 +111,11 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage>
                           fontSize: 14,
                         ),
                         tabs: categories
-                            .map((category) => Tab(text: category))
-                            .toList(),
+                            .map((category) => Tab(
+                          text: category.isNotEmpty
+                              ? '${category[0].toUpperCase()}${category.substring(1).toLowerCase()}'
+                              : category,
+                        )).toList(),
                         onTap: (index) {
                           setState(() {
                             _selectedCategoryIndex = index;
@@ -187,7 +182,6 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage>
   }
 }
 
-/// Product list for individual category
 class _ProductListView extends ConsumerWidget {
   final String category;
   final ScrollController scrollController;
@@ -253,7 +247,7 @@ class _ProductListView extends ConsumerWidget {
   }
 }
 
-/// Delegate for sticky tab bar
+
 class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar tabBar;
   final Color backgroundColor;
