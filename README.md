@@ -1,6 +1,6 @@
-# Daraz Clone - Flutter E-Commerce App
+# Demo Flutter E-Commerce App
 
-A production-ready Flutter application demonstrating Daraz-style product listing with proper scroll management, tab navigation, and user authentication.
+A Flutter application demonstrating Daraz-style product listing with proper scroll management, tab navigation, and user authentication.
 
 ## Quick Start
 
@@ -76,27 +76,9 @@ lib/
 3. **Browse**: Swipe between categories or tap tab bar
 4. **Refresh**: Pull down to refresh products
 5. **Details**: Tap a product card to see full info
-6. **Logout**: Tap logout button in header to return to login
 
-## Common Issues
-
-| Issue | Solution |
-|-------|----------|
-| Scroll jumps between tabs | Scroll state is preserved by CustomScrollView |
-| Tab bar not visible | It's pinned via SliverPersistentHeader |
-| Swipe doesn't work | Ensure horizontal gesture is inside PageView |
-
-## Next Steps
-
-- [ ] Add pagination for large product lists
-- [ ] Implement product search
-- [ ] Add local caching (offline support)
-- [ ] Create wishlist/cart features
-- [ ] Add checkout flow
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for full technical documentation.
 
----
 
-**Questions?** Check ARCHITECTURE.md for detailed implementation explanations.
 
