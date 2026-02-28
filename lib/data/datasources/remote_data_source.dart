@@ -65,6 +65,36 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
+  // Helper to safely extract string values
+  String _safeString(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
+  // Build a normalized user map that matches UserModel fields
+  Map<String, dynamic> _normalizeUserMap(Map<String, dynamic> raw) {
+    final name = raw['name'];
+    String firstName = '';
+    String lastName = '';
+    if (name is Map<String, dynamic>) {
+      firstName = _safeString(name['firstname'] ?? name['firstName']);
+      lastName = _safeString(name['lastname'] ?? name['lastName']);
+    } else {
+      // some APIs might provide flat fields
+      firstName = _safeString(raw['firstName']);
+      lastName = _safeString(raw['lastName']);
+    }
+
+    return {
+      'id': raw['id'] ?? 0,
+      'username': _safeString(raw['username']),
+      'email': _safeString(raw['email']),
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': _safeString(raw['phone']),
+    };
+  }
+
   @override
   Future<UserModel> getUserById(int userId) async {
     final response = await client
@@ -73,7 +103,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         .timeout(ApiConstants.connectionTimeout);
 
     if (response.statusCode == 200) {
-      return UserModel.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      final raw = jsonDecode(response.body);
+      if (raw is Map<String, dynamic>) {
+        final normalized = _normalizeUserMap(raw);
+        return UserModel.fromJson(normalized);
+      }
+      throw Exception('Unexpected user format');
     } else {
       throw Exception('Failed to load user');
     }
@@ -87,9 +122,21 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
-      return json
-          .map((item) => UserModel.fromJson(item as Map<String, dynamic>))
-          .toList();
+      return json.map((item) {
+        if (item is Map<String, dynamic>) {
+          final normalized = _normalizeUserMap(item);
+          return UserModel.fromJson(normalized);
+        }
+        // If the item isn't a map, attempt to convert to string map defensively
+        return UserModel.fromJson({
+          'id': 0,
+          'username': '',
+          'email': '',
+          'firstName': '',
+          'lastName': '',
+          'phone': '',
+        });
+      }).toList();
     } else {
       throw Exception('Failed to load users');
     }
