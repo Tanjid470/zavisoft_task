@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/app_providers.dart';
 
-class CollapsibleHeader extends StatelessWidget {
+class CollapsibleHeader extends ConsumerWidget {
   final dynamic currentUser;
 
   const CollapsibleHeader({
@@ -9,7 +11,9 @@ class CollapsibleHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchController = TextEditingController(text: ref.read(searchQueryProvider));
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -79,6 +83,10 @@ class CollapsibleHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextField(
+                  controller: searchController,
+                  onChanged: (v) {
+                    ref.read(searchQueryProvider.notifier).state = v;
+                  },
                   decoration: InputDecoration(
                     hintText: 'Search products...',
                     prefixIcon: const Icon(Icons.search),
