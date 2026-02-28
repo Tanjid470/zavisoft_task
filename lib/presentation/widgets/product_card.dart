@@ -204,6 +204,17 @@ class ProductCard extends StatelessWidget {
                           height: 1.3,
                         ),
                       ),
+                      Text(
+                        product.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          height: 1.3,
+                          color: Colors.black54,
+                        ),
+                      ),
                       const SizedBox(height: 8),
 
                       // Price and rating row
