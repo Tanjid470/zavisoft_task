@@ -194,10 +194,20 @@ class _ProductListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(productsByCategoryProvider(category));
+    final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
 
     return productsAsync.when(
       data: (products) {
-        if (products.isEmpty) {
+        // Apply simple client-side search filtering
+        final filtered = searchQuery.isEmpty
+            ? products
+            : products.where((p) {
+          final title = p.title.toLowerCase();
+          final desc = p.description.toLowerCase();
+          return title.contains(searchQuery) || desc.contains(searchQuery);
+        }).toList();
+
+        if (filtered.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -214,16 +224,18 @@ class _ProductListView extends ConsumerWidget {
 
         return RefreshIndicator(
           onRefresh: () async {
-            await ref.refresh(productsByCategoryProvider(category).future);
-            await Future.delayed(const Duration(milliseconds: 500));
+            // Invalidate the provider for this category so new data is fetched
+            ref.invalidate(productsByCategoryProvider(category));
+            // Give a small delay to let UI show the indicator
+            await Future.delayed(const Duration(milliseconds: 200));
           },
           child: ListView.builder(
             // Crucial: DO NOT use a new scroll controller here.
             // The scroll position is managed by CustomScrollView above.
             padding: const EdgeInsets.all(12),
-            itemCount: products.length,
+            itemCount: filtered.length,
             itemBuilder: (context, index) {
-              return ProductCard(product: products[index]);
+              return ProductCard(product: filtered[index]);
             },
           ),
         );
