@@ -77,6 +77,8 @@ final categoriesProvider = FutureProvider<List<String>>((ref) async {
 
 final selectedCategoryProvider = StateProvider<String?>((ref) => null);
 
+final searchQueryProvider = StateProvider<String>((ref) => '');
+
 final productsByCategoryProvider =
     FutureProvider.family<List<ProductEntity>, String?>((ref, category) async {
   if (category == null) {
