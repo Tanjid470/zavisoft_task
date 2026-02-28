@@ -156,13 +156,14 @@ class ProductCard extends StatelessWidget {
                       top: 12,
                       right: 12,
                       child: Container(
+                        height: 35,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.grey[100],
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
+                              blurRadius: 2,
                               offset: const Offset(0, 2),
                             ),
                           ],
@@ -171,7 +172,7 @@ class ProductCard extends StatelessWidget {
                           icon: Icon(
                             Icons.favorite_border,
                             size: 20,
-                            color: Colors.grey[600],
+                            color: Colors.red,
                           ),
                           onPressed: () {
                             // Add to wishlist functionality
