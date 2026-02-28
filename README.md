@@ -2,6 +2,11 @@
 
 A Flutter application demonstrating Daraz-style product listing with proper scroll management, tab navigation, and user authentication.
 
+
+Download the APK file and install it on your Android device to get an overview of the completed task.
+
+[⬇️ Download APK](https://github.com/Tanjid470/zavisoft_task/releases/download/release/app-release.apk)
+
 ## Quick Start
 
 ```bash
@@ -76,6 +81,7 @@ lib/
 3. **Browse**: Swipe between categories or tap tab bar
 4. **Refresh**: Pull down to refresh products
 5. **Details**: Tap a product card to see full info
+
 
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for full technical documentation.
